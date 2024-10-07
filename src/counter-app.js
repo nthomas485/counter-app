@@ -10,11 +10,18 @@ export class counterApp extends DDDSuper(LitElement) {
   constructor() {
     super();
     this.title = "";
+    this.max = 25;
+    this.min = 0;
+    this.count = 0;
+    this.isMax = false
   }
 
   static get properties() {
     return {
       title: { type: String },
+      max: { type: Number },
+      min: { type: Number },
+      count: { type: Number, reflect: true },
     };
   }
 
@@ -28,6 +35,15 @@ export class counterApp extends DDDSuper(LitElement) {
         font-family: var(--ddd-font-navigation);
         font-size: var(--counter-app-font-size, var(--ddd-font-size-s));
       }
+
+      :host([count="18"]) .countDisplay {
+        color: var(--color-1-background);
+      }
+      
+      :host([count="21"]) .countDisplay {
+        color: var(--color-2-background);
+      }
+  
       .wrapper {
         margin: var(--ddd-spacing-2);
         padding: var(--ddd-spacing-4);
@@ -36,6 +52,48 @@ export class counterApp extends DDDSuper(LitElement) {
         padding: 0;
         margin: 0;
       }
+
+      .countDisplay{
+        color: purple;
+        margin-left: 0px;
+      }
+      
+      .add{
+        border: 10px;
+        margin-left: 22px;
+      }
+      .subtract{
+        border: 10px;
+        margin-left: 6px;
+      }
+      
+      button{
+        border-radius: 50%;
+        width: 35px;
+        font-size: 30px;
+      }
+
+      button:hover{
+        background-color: grey;
+      }
+
+      button:focus{
+        border-color: fuchsia
+      }
+      .container{
+        display: flex;
+      }
+      .countDisplay{
+        font-size: 100px;
+      }
+
+      .hightlight {
+    background-color: lightgreen;
+  }
+    .isMax {
+      color: white;
+    }
+
     `];
   }
 
@@ -44,7 +102,50 @@ export class counterApp extends DDDSuper(LitElement) {
 <div class="wrapper">
   <div>${this.title}</div>
   <slot></slot>
-</div>`;
+</div>
+<div class="countDisplay">
+  ${this.count}
+  </div>
+
+  <div class="container">
+  <div class="subtract">
+    <button title="Decrease" ?disabled="${this.min === this.count}" @click="${this.decrease}"> - </button>
+  </div>
+  <div class="add">
+    <button title="Increase" ?disabled="${this.max === this.count}" @click="${this.increase}"> + </button>
+  </div>
+  </div>
+`;
+  }
+
+  increase() {
+    if (this.count == this.max) {
+
+    }
+    this.count += 1;
+  }
+
+  decrease() {
+    this.count -= 1;
+  }
+
+  updated(changeProperties) {
+    // if (changeProperties.has('count')) {
+    //   const countDisplay = this.querySelector('.countDisplay');
+    //   if (this.count == "18") {
+    //     countDisplay.classList.add('highlight');
+    //   } else {
+    //     countDisplay.classList.remove('highlight');
+    //   }
+    // }
+    if (this.count == this.max) {
+      this.shadowRoot.querySelector(".countDisplay").classList.add("isMax")
+      this.isMax = true
+    } else {
+      this.shadowRoot.querySelector(".countDisplay").classList.remove("isMax")
+      this.isMax = false
+    }
+    console.log()
   }
 
   /**
@@ -55,5 +156,6 @@ export class counterApp extends DDDSuper(LitElement) {
       .href;
   }
 }
+
 
 globalThis.customElements.define(counterApp.tag, counterApp);
