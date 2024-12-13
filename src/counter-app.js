@@ -129,6 +129,16 @@ export class counterApp extends DDDSuper(LitElement) {
     this.count -= 1;
   }
 
+  makeItRain() {
+    import("@haxtheweb/multiple-choice/lib/confetti-container.js").then(
+      (module) => {
+        setTimeout(() => {
+          this.shadowRoot.querySelector("#confetti").setAttribute("popped", "");
+        }, 0);
+      }
+    );
+  }
+
   updated(changeProperties) {
     // if (changeProperties.has('count')) {
     //   const countDisplay = this.querySelector('.countDisplay');
